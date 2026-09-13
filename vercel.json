@@ -3,19 +3,22 @@
   "redirects": [
     {
       "source": "/game.html",
-      "missing": [
-        {
-          "type": "query",
-          "key": "embedded"
-        }
-      ],
-      "destination": "/game-cloud-shell.html",
+      "destination": "/play.html",
       "permanent": false
     }
   ],
   "headers": [
     {
-      "source": "/game-cloud-shell.html",
+      "source": "/supabase-config.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/play.html",
       "headers": [
         {
           "key": "Cache-Control",
