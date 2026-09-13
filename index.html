@@ -5,104 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Fruit Tank Spelling Game (Single File)</title>
 <style>
-  :root {
-    --bg:#0f1320;
-    --panel:#1b2033;
-    --accent:#8be9fd;
-    --good:#00e676;
-    --bad:#ff5252;
-    --text:#e6f1ff;
-    --muted:#9fb2c8;
-  }
+  :root { --bg:#0f1320; --panel:#1b2033; --accent:#8be9fd; --good:#00e676; --bad:#ff5252; --text:#e6f1ff; --muted:#9fb2c8; }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Microsoft YaHei", sans-serif; }
   .layout { display: grid; grid-template-columns: 320px 1fr; height: 100%; gap: 16px; padding: 16px; }
   @media (max-width: 900px) { .layout { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } }
-  .left {
-    background: var(--panel);
-    border-radius: 14px;
-    padding: 14px;
-    display: grid;
-    grid-template-rows: auto auto auto auto 1fr auto;
-    gap: 12px;
-    box-shadow: 0 6px 24px rgba(0,0,0,.35);
-  }
+  .left { background: var(--panel); border-radius: 14px; padding: 14px; display: grid; grid-template-rows: auto auto auto auto 1fr auto; gap: 12px; box-shadow: 0 6px 24px rgba(0,0,0,.35); }
   h1 { font-size: 20px; margin: 0 0 6px; }
-  .fruit-box {
-    background: #0c1020;
-    border: 1px solid #2a3353;
-    border-radius: 12px;
-    height: 180px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow: hidden;
-  }
+  .fruit-box { background: #0c1020; border: 1px solid #2a3353; border-radius: 12px; height: 180px; display:flex; align-items:center; justify-content:center; overflow: hidden; }
   .fruit-box svg { width: 100%; height: 100%; }
   .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .stat {
-    background: #12162a;
-    border: 1px solid #283059;
-    border-radius: 12px;
-    padding: 10px;
-    text-align: center;
-  }
+  .stat { background: #12162a; border: 1px solid #283059; border-radius: 12px; padding: 10px; text-align: center; }
   .stat b { font-size: 18px; display: block; color: var(--accent); }
-  .word {
-    background: #12162a; border:1px solid #283059; border-radius: 10px; padding: 10px;
-    font-weight: 700; letter-spacing: .12em; text-align:center; font-size: 20px;
-  }
+  .word { background: #12162a; border:1px solid #283059; border-radius: 10px; padding: 10px; font-weight: 700; letter-spacing: .12em; text-align:center; font-size: 20px; }
   .controls { display:flex; gap: 8px; flex-wrap: wrap; }
-  .btn {
-    background: #182041; border:1px solid #2c3a72; color: var(--text);
-    border-radius: 10px; padding: 10px 12px; cursor: pointer; user-select: none;
-    transition: transform .06s ease, filter .2s ease, background .2s ease;
-  }
-  .btn:hover { filter: brightness(1.15); }
-  .btn:active { transform: translateY(1px) scale(.99); }
+  .btn { background: #182041; border:1px solid #2c3a72; color: var(--text); border-radius: 10px; padding: 10px 12px; cursor: pointer; user-select: none; transition: transform .06s ease, filter .2s ease, background .2s ease; }
+  .btn:hover { filter: brightness(1.15); } .btn:active { transform: translateY(1px) scale(.99); }
   .legend { font-size: 12px; color: var(--muted); line-height: 1.4; }
-  .canvas-wrap {
-    position: relative;
-    background: #0b0f1d;
-    border: 1px solid #2a3353;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: inset 0 0 40px rgba(0,0,0,.4);
-  }
+  .canvas-wrap { position: relative; background: #0b0f1d; border: 1px solid #2a3353; border-radius: 16px; overflow: hidden; box-shadow: inset 0 0 40px rgba(0,0,0,.4); }
   canvas { display: block; width: 100%; height: 100%; }
-  .mobile-keys {
-    position: absolute; left: 0; right: 0; bottom: 12px; display: flex; gap: 12px;
-    justify-content: center; align-items: center; pointer-events: none;
-  }
-  .key {
-    pointer-events: auto;
-    width: 62px; height: 62px; border-radius: 50%;
-    background: rgba(24,32,65,.55);
-    border:1px solid #33407b;
-    display:flex; align-items:center; justify-content:center;
-    font-weight: 700; color: #d7e4ff;
-    box-shadow: 0 6px 16px rgba(0,0,0,.35);
-    user-select: none; -webkit-user-select: none;
-  }
+  .mobile-keys { position: absolute; left: 0; right: 0; bottom: 12px; display: flex; gap: 12px; justify-content: center; align-items: center; pointer-events: none; }
+  .key { pointer-events: auto; width: 62px; height: 62px; border-radius: 50%; background: rgba(24,32,65,.55); border:1px solid #33407b; display:flex; align-items:center; justify-content:center; font-weight: 700; color: #d7e4ff; box-shadow: 0 6px 16px rgba(0,0,0,.35); user-select: none; -webkit-user-select: none; }
   .key:active { transform: scale(.96) translateY(1px); }
-  .toast {
-    position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-    background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.14);
-    padding: 8px 12px; border-radius: 8px; color: #fff; font-size: 14px;
-    opacity: 0; transition: opacity .3s ease;
-  }
+  .toast { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.14); padding: 8px 12px; border-radius: 8px; color: #fff; font-size: 14px; opacity: 0; transition: opacity .3s ease; }
   .toast.show { opacity: 1; }
-  .badge {
-    display:inline-flex; align-items:center; gap:6px; padding:6px 10px;
-    background:#141b36; border:1px solid #2a3353; border-radius: 999px; font-size:12px;
-  }
-  .row { display:flex; gap:8px; align-items:center; }
-  .select {
-    background:#141b36; border:1px solid #2a3353; color:#dfe8ff; border-radius:8px; padding:8px 10px;
-  }
-  .pill {
-    display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid #2a3353; background:#111734; color:#8be9fd; font-size:12px;
-  }
+  .badge { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; background:#141b36; border:1px solid #2a3353; border-radius: 999px; font-size:12px; }
+  .row { display:flex; gap:8px; align-items:center; } .select { background:#141b36; border:1px solid #2a3353; color:#dfe8ff; border-radius:8px; padding:8px 10px; }
+  .pill { display:inline-block; padding:4px 8px; border-radius:999px; border:1px solid #2a3353; background:#111734; color:#8be9fd; font-size:12px; }
 </style>
 </head>
 <body>
@@ -112,587 +41,44 @@
       <h1>Fruit Tank Spelling Game</h1>
       <div class="badge">🎯 Rule: Shoot letters with the tank to spell the word in the <strong>correct order</strong></div>
     </div>
-
     <div id="fruitBox" class="fruit-box"></div>
-
-    <div class="stats">
-      <div class="stat"><span>Score</span><b id="score">0</b></div>
-      <div class="stat"><span>Timer</span><b id="timer">0</b></div>
-    </div>
-
-    <div class="row">
-      <span>Difficulty</span>
-      <select id="difficulty" class="select" aria-label="Difficulty">
-        <option value="Easy">Easy (60s/word)</option>
-        <option value="Normal" selected>Normal (40s/word)</option>
-        <option value="Hard">Hard (20s/word)</option>
-      </select>
-      <span class="pill" id="perWord">40s / word</span>
-    </div>
-
+    <div class="stats"><div class="stat"><span>Score</span><b id="score">0</b></div><div class="stat"><span>Timer</span><b id="timer">0</b></div></div>
+    <div class="row"><span>Difficulty</span><select id="difficulty" class="select" aria-label="Difficulty"><option value="Easy">Easy (60s/word)</option><option value="Normal" selected>Normal (40s/word)</option><option value="Hard">Hard (20s/word)</option></select><span class="pill" id="perWord">40s / word</span></div>
     <div id="wordProgress" class="word">_ _ _ _ _</div>
-
-    <div class="controls">
-      <div class="btn" id="btnStart">▶️ Start</div>
-      <div class="btn" id="btnPause">⏸ Pause</div>
-      <div class="btn" id="btnNext">⏭ Skip</div>
-      <div class="btn" id="btnReset">🔄 Reset</div>
-    </div>
-    <div class="legend">
-      Keyboard: ← → move, Space to fire.<br/>
-      Mobile: Use on‑screen buttons to move and fire.<br/>
-      +100 points for each correctly spelled word. Wrong hits do not deduct points (low tone). When time is up, the game auto-jumps to the next word.
-    </div>
+    <div class="controls"><div class="btn" id="btnStart">▶️ Start</div><div class="btn" id="btnPause">⏸ Pause</div><div class="btn" id="btnNext">⏭ Skip</div><div class="btn" id="btnReset">🔄 Reset</div></div>
+    <div class="legend">Keyboard: ← → move, hold Space to auto‑fire.<br/>Mobile: hold the fire button to auto‑fire.<br/>+100 points for each correctly spelled word. Wrong hits do not deduct points (low tone). When time is up, the game auto-jumps to the next word.</div>
   </div>
-
   <div class="canvas-wrap">
     <div class="toast" id="toast"></div>
     <canvas id="game"></canvas>
-    <div class="mobile-keys" id="mobileKeys" aria-hidden="true">
-      <div class="key" data-act="left">←</div>
-      <div class="key" data-act="fire">●</div>
-      <div class="key" data-act="right">→</div>
-    </div>
+    <div class="mobile-keys" id="mobileKeys" aria-hidden="true"><div class="key" data-act="left">←</div><div class="key" data-act="fire">●</div><div class="key" data-act="right">→</div></div>
   </div>
 </div>
-
 <script>
-/* ============ Sound (WebAudio, no external files) ============ */
-class Sound {
-  constructor() {
-    this.ctx = null;
-  }
-  ensure() {
-    if (!this.ctx) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      this.ctx = new AudioCtx();
-    }
-  }
-  beep({freq=880, dur=0.12, type='sine', vol=0.2}){
-    this.ensure();
-    const t0 = this.ctx.currentTime;
-    const osc = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, t0);
-    gain.gain.setValueAtTime(0, t0);
-    gain.gain.linearRampToValueAtTime(vol, t0 + 0.005);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-    osc.connect(gain).connect(this.ctx.destination);
-    osc.start(t0);
-    osc.stop(t0 + dur + 0.02);
-  }
-  correct(){ this.beep({freq:1046, dur:0.09, type:'triangle', vol:0.25}); }
-  wrong(){ this.beep({freq:160, dur:0.14, type:'sawtooth', vol:0.22}); }
-  fire(){ this.beep({freq:480, dur:0.06, type:'square', vol:0.2}); }
-  success(){
-    const seq = [880, 1175, 1568];
-    seq.forEach((f, i)=> setTimeout(()=> this.beep({freq:f, dur:0.09, type:'triangle', vol:0.25}), i*110));
-  }
-}
-const SND = new Sound();
-
-/* ============ Fruit SVG (no external images) ============ */
-function generateFruitSVG(name) {
-  const n = String(name).toLowerCase();
-  const S = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">';
-  const E = '</svg>';
-
-  switch (n) {
-    case 'apple':
-      return `${S}
-        <rect x="58" y="16" width="4" height="14" fill="#7b4a12"/>
-        <ellipse cx="48" cy="26" rx="12" ry="6" fill="#43a047" transform="rotate(-20 48 26)"/>
-        <circle cx="60" cy="70" r="36" fill="#e53935"/>
-      ${E}`;
-
-    case 'banana':
-      return `${S}
-        <path d="M30 80 C 20 50, 60 40, 95 60 C 75 68, 58 85, 30 80 Z" fill="#fdd835"/>
-      ${E}`;
-
-    case 'orange':
-      return `${S}
-        <circle cx="60" cy="65" r="38" fill="#fb8c00"/>
-        <ellipse cx="47" cy="28" rx="10" ry="6" fill="#43a047" transform="rotate(-15 47 28)"/>
-      ${E}`;
-
-    case 'grape':
-      return `${S}
-        <circle cx="50" cy="48" r="12" fill="#8e24aa"/>
-        <circle cx="70" cy="48" r="12" fill="#8e24aa"/>
-        <circle cx="40" cy="64" r="12" fill="#8e24aa"/>
-        <circle cx="60" cy="64" r="12" fill="#8e24aa"/>
-        <circle cx="80" cy="64" r="12" fill="#8e24aa"/>
-        <circle cx="50" cy="80" r="12" fill="#8e24aa"/>
-        <circle cx="70" cy="80" r="12" fill="#8e24aa"/>
-        <path d="M60 22 L65 10" stroke="#795548" stroke-width="4"/>
-        <ellipse cx="65" cy="16" rx="10" ry="6" fill="#43a047" transform="rotate(-10 65 16)"/>
-      ${E}`;
-
-    case 'peach':
-      return `${S}
-        <path d="M60 35 C 80 20, 102 40, 100 65 C 98 90, 78 102, 60 105 C 42 102, 22 90, 20 65 C 18 40, 40 20, 60 35 Z" fill="#ff8a80"/>
-        <path d="M60 35 C 70 48, 70 62, 60 75 C 50 62, 50 48, 60 35 Z" fill="#ffab91"/>
-        <ellipse cx="46" cy="24" rx="11" ry="6" fill="#43a047" transform="rotate(-20 46 24)"/>
-      ${E}`;
-
-    case 'pear':
-      return `${S}
-        <path d="M60 25 C 85 35, 88 60, 75 80 C 70 88, 65 100, 60 100 C 55 100, 50 88, 45 80 C 32 60, 35 35, 60 25 Z" fill="#c5e1a5"/>
-        <rect x="58" y="18" width="4" height="10" fill="#7b4a12"/>
-        <ellipse cx="52" cy="18" rx="10" ry="6" fill="#43a047" transform="rotate(-20 52 18)"/>
-      ${E}`;
-
-    case 'mango':
-      return `${S}
-        <ellipse cx="65" cy="70" rx="38" ry="28" fill="#ffb74d" transform="rotate(-18 65 70)"/>
-        <ellipse cx="80" cy="55" rx="10" ry="6" fill="#43a047" transform="rotate(-10 80 55)"/>
-      ${E}`;
-
-    case 'lemon':
-      return `${S}
-        <path d="M25 65 C 30 40, 90 40, 95 65 C 90 90, 30 90, 25 65 Z" fill="#ffeb3b"/>
-      ${E}`;
-
-    case 'cherry':
-      return `${S}
-        <circle cx="45" cy="82" r="14" fill="#d32f2f"/>
-        <circle cx="75" cy="82" r="14" fill="#d32f2f"/>
-        <path d="M45 68 C 46 50, 60 45, 70 40" stroke="#795548" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <path d="M75 68 C 74 50, 60 45, 70 40" stroke="#795548" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <ellipse cx="72" cy="38" rx="10" ry="6" fill="#43a047" transform="rotate(-10 72 38)"/>
-      ${E}`;
-
-    case 'strawberry':
-      return `${S}
-        <path d="M60 35 C 82 28, 100 45, 90 68 C 80 92, 60 105, 60 105 C 60 105, 40 92, 30 68 C 20 45, 38 28, 60 35 Z" fill="#e53935"/>
-        <circle cx="52" cy="60" r="2" fill="#ffeb3b"/>
-        <circle cx="68" cy="62" r="2" fill="#ffeb3b"/>
-        <circle cx="56" cy="74" r="2" fill="#ffeb3b"/>
-        <circle cx="64" cy="76" r="2" fill="#ffeb3b"/>
-        <path d="M60 28 L70 20 L80 30" stroke="#43a047" stroke-width="6" fill="none" stroke-linecap="round"/>
-      ${E}`;
-
-    case 'blueberry':
-      return `${S}
-        <circle cx="60" cy="65" r="32" fill="#3949ab"/>
-        <circle cx="60" cy="62" r="10" fill="#283593"/>
-        <path d="M60 55 L55 60 L60 65 L65 60 Z" fill="#1a237e"/>
-      ${E}`;
-
-    case 'pineapple':
-      return `${S}
-        <path d="M40 35 L50 18 L60 35 L70 18 L80 35" fill="#43a047"/>
-        <rect x="35" y="40" width="50" height="60" rx="10" fill="#fdd835"/>
-        <path d="M35 50 L85 100 M35 65 L85 115 M50 40 L100 90 M35 80 L75 120" stroke="#fbc02d" stroke-width="2"/>
-        <path d="M85 50 L35 100 M85 65 L35 115 M70 40 L20 90 M85 80 L45 120" stroke="#fbc02d" stroke-width="2"/>
-      ${E}`;
-
-    case 'watermelon':
-      return `${S}
-        <path d="M20 95 A 40 40 0 0 1 100 95 L 20 95 Z" fill="#2e7d32"/>
-        <path d="M26 95 A 34 34 0 0 1 94 95 L 26 95 Z" fill="#66bb6a"/>
-        <path d="M32 95 A 28 28 0 0 1 88 95 L 32 95 Z" fill="#ef5350"/>
-        <circle cx="50" cy="88" r="2" fill="#212121"/>
-        <circle cx="60" cy="85" r="2" fill="#212121"/>
-        <circle cx="70" cy="88" r="2" fill="#212121"/>
-      ${E}`;
-
-    case 'kiwi':
-      return `${S}
-        <circle cx="60" cy="65" r="38" fill="#8d6e63"/>
-        <circle cx="60" cy="65" r="28" fill="#8bc34a"/>
-        <circle cx="60" cy="65" r="10" fill="#fafafa"/>
-        <g fill="#212121">
-          <circle cx="60" cy="48" r="2"/>
-          <circle cx="71" cy="54" r="2"/>
-          <circle cx="72" cy="67" r="2"/>
-          <circle cx="49" cy="54" r="2"/>
-          <circle cx="48" cy="67" r="2"/>
-          <circle cx="60" cy="80" r="2"/>
-        </g>
-      ${E}`;
-
-    case 'papaya':
-      return `${S}
-        <ellipse cx="60" cy="70" rx="38" ry="26" fill="#ffb74d"/>
-        <ellipse cx="60" cy="70" rx="20" ry="12" fill="#4e342e"/>
-      ${E}`;
-
-    case 'lychee':
-      return `${S}
-        <circle cx="60" cy="70" r="28" fill="#e53935"/>
-        <g fill="#ffcdd2">
-          <circle cx="48" cy="60" r="2"/>
-          <circle cx="72" cy="60" r="2"/>
-          <circle cx="60" cy="70" r="2"/>
-          <circle cx="50" cy="82" r="2"/>
-          <circle cx="70" cy="82" r="2"/>
-        </g>
-        <ellipse cx="60" cy="40" rx="10" ry="6" fill="#43a047" transform="rotate(-10 60 40)"/>
-      ${E}`;
-
-    case 'dragonfruit':
-      return `${S}
-        <ellipse cx="60" cy="70" rx="36" ry="24" fill="#ffffff" stroke="#ec407a" stroke-width="6"/>
-        <g fill="#212121">
-          <circle cx="50" cy="60" r="2"/>
-          <circle cx="70" cy="60" r="2"/>
-          <circle cx="60" cy="70" r="2"/>
-          <circle cx="52" cy="78" r="2"/>
-          <circle cx="68" cy="78" r="2"/>
-        </g>
-        <path d="M24 70 L14 60 L26 62 M96 70 L106 60 L94 62" stroke="#66bb6a" stroke-width="4" fill="none" stroke-linecap="round"/>
-      ${E}`;
-
-    default:
-      return `${S}<rect x="10" y="10" width="100" height="100" rx="12" fill="#9ccc65"/></svg>`;
-  }
-}
-
-/* ============ Word pool ============ */
-const fruits = [
-  { word: "apple" }, { word: "banana" }, { word: "orange" }, { word: "grape" },
-  { word: "peach" }, { word: "pear" }, { word: "mango" }, { word: "lemon" },
-  { word: "cherry" }, { word: "strawberry" }, { word: "blueberry" },
-  { word: "pineapple" }, { word: "watermelon" }, { word: "kiwi" },
-  { word: "papaya" }, { word: "lychee" }, { word: "dragonfruit" }
-];
-
-/* ============ Utils ============ */
-const $ = sel => document.querySelector(sel);
-const clamp = (v, a, b)=> Math.max(a, Math.min(b, v));
-function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [arr[i], arr[j]]=[arr[j], arr[i]]; } return arr; }
-function showToast(msg, ms=1000){
-  const el = $("#toast"); el.textContent = msg; el.classList.add("show");
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(()=> el.classList.remove("show"), ms);
-}
-
-/* ============ Canvas & entities ============ */
-const canvas = $("#game");
-const ctx = canvas.getContext("2d", { alpha: false });
-
-let W=0, H=0, DPR=1;
-function resize(){
-  const rect = canvas.parentElement.getBoundingClientRect();
-  DPR = Math.min(2, window.devicePixelRatio||1);
-  W = Math.floor(rect.width * DPR);
-  H = Math.floor(rect.height * DPR);
-  canvas.width = W; canvas.height = H;
-  canvas.style.width = rect.width + "px";
-  canvas.style.height = rect.height + "px";
-}
-window.addEventListener("resize", resize);
-resize();
-
-class Player {
-  constructor(){
-    this.w = 70; this.h = 24;
-    this.x = W/2; this.y = H - this.h - 10;
-    this.speed = 460;
-    this.cooldown = 0;
-  }
-  update(dt, input){
-    const vx = (input.right - input.left) * this.speed;
-    this.x += vx * dt;
-    this.x = clamp(this.x, this.w/2+6, W - this.w/2 - 6);
-    if (this.cooldown > 0) this.cooldown -= dt;
-  }
-  draw(g){
-    g.save();
-    g.translate(this.x, this.y);
-    // base
-    g.fillStyle = "#5671ff";
-    g.fillRect(-this.w/2, -this.h/2, this.w, this.h);
-    // turret
-    g.fillStyle = "#9db0ff";
-    g.fillRect(-12, -this.h/2 - 10, 24, 16);
-    g.fillStyle = "#c7d2ff";
-    g.fillRect(-4, -this.h/2 - 22, 8, 22);
-    g.restore();
-  }
-  canFire(){ return this.cooldown<=0; }
-  fire(bullets){
-    if (!this.canFire()) return;
-    this.cooldown = 0.18;
-    bullets.push(new Bullet(this.x, this.y - this.h/2 - 24));
-    SND.fire();
-  }
-}
-
-class Bullet {
-  constructor(x, y){
-    this.x = x; this.y = y; this.r = 6; this.vy = -720;
-    this.alive = true;
-  }
-  update(dt){
-    this.y += this.vy * dt;
-    if (this.y < -20) this.alive = false;
-  }
-  draw(g){
-    g.save();
-    g.fillStyle = "#e0e7ff";
-    g.beginPath();
-    g.arc(this.x, this.y, this.r, 0, Math.PI*2);
-    g.fill();
-    g.restore();
-  }
-}
-
-class LetterTarget {
-  constructor(ch, id, x, y){
-    this.ch = ch;
-    this.id = id; // unique id (for duplicate letters)
-    this.x = x; this.y = y;
-    this.r = 26;
-    this.vx = (Math.random()*2-1) * 60;
-    this.vy = (Math.random()*2-1) * 60;
-  }
-  update(dt){
-    this.x += this.vx * dt;
-    this.y += this.vy * dt;
-    // bounce
-    if (this.x < this.r || this.x > W - this.r){ this.vx *= -1; this.x = clamp(this.x, this.r, W - this.r); }
-    if (this.y < 70 || this.y > H - 160){ this.vy *= -1; this.y = clamp(this.y, 70, H - 160); }
-  }
-  draw(g, isNext){
-    g.save();
-    // ring
-    g.fillStyle = isNext ? "#16326b" : "#142347";
-    g.strokeStyle = isNext ? "#8be9fd" : "#4a5b9b";
-    g.lineWidth = 3;
-    g.beginPath(); g.arc(this.x, this.y, this.r, 0, Math.PI*2); g.fill(); g.stroke();
-    // letter
-    g.fillStyle = isNext ? "#dff8ff" : "#d7e1ff";
-    g.font = (22*DPR) + "px system-ui,Segoe UI,Arial";
-    g.textAlign = "center"; g.textBaseline = "middle";
-    g.fillText(this.ch.toUpperCase(), this.x, this.y+1);
-    g.restore();
-  }
-}
-
-/* ============ Input ============ */
-const input = { left:0, right:0, fire:0 };
-window.addEventListener("keydown", e=>{
-  if (e.key==="ArrowLeft") input.left = 1;
-  if (e.key==="ArrowRight") input.right = 1;
-  if (e.code==="Space"){ input.fire = 1; e.preventDefault(); }
-});
-window.addEventListener("keyup", e=>{
-  if (e.key==="ArrowLeft") input.left = 0;
-  if (e.key==="ArrowRight") input.right = 0;
-  if (e.code==="Space"){ input.fire = 0; }
-});
-
-// Mobile buttons
-const mobileKeys = $("#mobileKeys");
-let isTouch = false;
-["left","right","fire"].forEach(act=>{
-  const el = mobileKeys.querySelector(`[data-act="${act}"]`);
-  const on = (v)=>{
-    if (act==="left") input.left = v;
-    else if (act==="right") input.right = v;
-    else if (act==="fire" && v){ player.fire(bullets); }
-  };
-  ["pointerdown","pointerup","pointerleave","pointercancel"].forEach(tp=>{
-    el.addEventListener(tp, (ev)=>{
-      isTouch = true;
-      if (tp==="pointerdown") on(1);
-      else on(0);
-    });
-  });
-});
-
-/* ============ Difficulty ============ */
-const DIFF_SECONDS = { Easy: 60, Normal: 40, Hard: 20 };
-let difficulty = "Normal";
-const diffSel = $("#difficulty");
-const perWordEl = $("#perWord");
-diffSel.addEventListener("change", ()=>{
-  difficulty = diffSel.value;
-  perWordEl.textContent = DIFF_SECONDS[difficulty] + "s / word";
-  showToast("Difficulty: " + difficulty + " (" + DIFF_SECONDS[difficulty] + "s/word)", 900);
-  // Apply immediately to current round if running
-  if (running && !paused) {
-    timeLeft = DIFF_SECONDS[difficulty];
-    $("#timer").textContent = timeLeft.toFixed(0);
-  }
-});
-
-/* ============ Game state ============ */
-let player = new Player();
-let bullets = [];
-let letters = [];
-let running = false;
-let paused = false;
-let score = 0;
-let timeLeft = 40; // per word, based on difficulty
-let curWord = "";
-let curIndex = 0;
-let pool = shuffle(fruits.slice()); // random order
-let lastTs = 0;
-
-function newWord(){
-  if (pool.length===0){
-    pool = shuffle(fruits.slice());
-  }
-  curWord = pool.pop().word;
-  curIndex = 0;
-  $("#fruitBox").innerHTML = generateFruitSVG(curWord);
-  updateWordProgress();
-  spawnLetters(curWord);
-  timeLeft = DIFF_SECONDS[difficulty];
-  $("#timer").textContent = timeLeft.toFixed(0);
-  showToast("New word: " + curWord.toUpperCase(), 900);
-}
-
-function updateWordProgress(){
-  const done = curWord.slice(0, curIndex).split("").join(" ");
-  const todo = curWord.slice(curIndex).split("").map(()=>"_").join(" ");
-  $("#wordProgress").textContent = (done + (done && todo ? " " : "") + todo).trim();
-}
-
-function spawnLetters(word){
-  letters = [];
-  bullets = [];
-  // One target per letter (duplicates => multiple targets)
-  const chars = word.split("");
-  const n = chars.length;
-  for (let i=0; i<n; i++){
-    const angle = (i / n) * Math.PI * 2 + Math.random()*0.5;
-    const radius = Math.min(W, H) * 0.32 + Math.random()*40;
-    const cx = W/2 + Math.cos(angle) * radius * 0.6;
-    const cy = H/2 + Math.sin(angle) * radius * 0.3;
-    letters.push(new LetterTarget(chars[i], i + "-" + Math.random().toString(16).slice(2), clamp(cx, 36, W-36), clamp(cy, 80, H-200)));
-  }
-}
-
-function startGame(){
-  running = true; paused = false; score=0;
-  $("#score").textContent = score;
-  newWord();
-  lastTs = performance.now();
-  requestAnimationFrame(loop);
-}
-function pauseGame(){ paused = !paused; showToast(paused? "Paused":"Resumed"); }
-function nextWord(){ newWord(); }
-function resetGame(){
-  running=false; paused=false;
-  player = new Player(); bullets=[]; letters=[];
-  $("#score").textContent = "0";
-  $("#timer").textContent = String(DIFF_SECONDS[difficulty]);
-  $("#fruitBox").innerHTML = "";
-  $("#wordProgress").textContent = "_ _ _";
-  showToast("Reset. Click Start", 1000);
-}
-
-$("#btnStart").addEventListener("click", ()=>{
-  if (!running) startGame();
-  else { newWord(); }
-});
-$("#btnPause").addEventListener("click", pauseGame);
-$("#btnNext").addEventListener("click", nextWord);
-$("#btnReset").addEventListener("click", resetGame);
-
-/* ============ Main loop ============ */
-function loop(ts){
-  if (!running){ return; }
-  const dt = Math.min(0.03, (ts - lastTs)/1000);
-  lastTs = ts;
-  if (!paused){
-    update(dt);
-    draw();
-  }
-  requestAnimationFrame(loop);
-}
-
-function update(dt){
-  // timer
-  timeLeft -= dt;
-  if (timeLeft <= 0){
-    showToast("Time's up! Next word…", 900);
-    newWord();
-  }
-  $("#timer").textContent = Math.max(0, timeLeft|0);
-
-  // player & bullets
-  player.update(dt, input);
-  if (input.fire) { player.fire(bullets); input.fire = 0; } // tap to fire
-  bullets.forEach(b=> b.update(dt));
-  bullets = bullets.filter(b=> b.alive);
-
-  // letters
-  letters.forEach(l=> l.update(dt));
-
-  // collisions
-  bullets.forEach(b=>{
-    letters.forEach(l=>{
-      if (!b.alive) return;
-      const dx = b.x - l.x, dy = b.y - l.y;
-      const rr = (b.r + l.r) * (b.r + l.r);
-      if (dx*dx + dy*dy <= rr){
-        b.alive = false;
-        const needed = curWord[curIndex];
-        if (l.ch === needed){
-          // correct letter
-          SND.correct();
-          letters = letters.filter(x=> x !== l);
-          curIndex++;
-          updateWordProgress();
-          if (curIndex >= curWord.length){
-            SND.success();
-            score += 100;
-            $("#score").textContent = score;
-            setTimeout(()=> newWord(), 450);
-          }
-        }else{
-          // wrong letter
-          SND.wrong();
-          showToast(`Next letter: ${needed.toUpperCase()}`, 700);
-        }
-      }
-    });
-  });
-}
-
-function draw(){
-  ctx.fillStyle = "#0a0e1b";
-  ctx.fillRect(0,0,W,H);
-
-  // grid
-  ctx.strokeStyle = "rgba(80,100,180,.08)";
-  ctx.lineWidth = 1;
-  for (let x=0; x<=W; x+= 40*DPR){ ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
-  for (let y=0; y<=H; y+= 40*DPR){ ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
-
-  // letter targets
-  letters.forEach((l, i)=>{
-    const needed = curWord[curIndex];
-    l.draw(ctx, l.ch === needed);
-  });
-
-  // bullets
-  bullets.forEach(b=> b.draw(ctx));
-
-  // player
-  player.draw(ctx);
-}
-
-// initial hint
-showToast("Click Start. Space to fire, ← → to move.", 1600);
-
-// unlock audio on first user gesture (mobile)
-document.body.addEventListener("pointerdown", ()=> SND.ensure(), { once:true });
-
-// show/hide mobile keys
-function updateMobileKeysVisibility(){
-  const isSmall = window.innerWidth < 900 || "ontouchstart" in window;
-  mobileKeys.style.display = isSmall ? "flex" : "none";
-}
-updateMobileKeysVisibility();
-window.addEventListener("resize", updateMobileKeysVisibility);
+class Sound { constructor(){this.ctx=null;} ensure(){ if(!this.ctx){const A=window.AudioContext||window.webkitAudioContext;if(!A) return;this.ctx=new A();} if(this.ctx.state==='suspended') this.ctx.resume(); } beep({freq=880,dur=.12,type='sine',vol=.2}){this.ensure();if(!this.ctx)return;const t0=this.ctx.currentTime,osc=this.ctx.createOscillator(),gain=this.ctx.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,t0);gain.gain.setValueAtTime(0,t0);gain.gain.linearRampToValueAtTime(vol,t0+.005);gain.gain.exponentialRampToValueAtTime(.0001,t0+dur);osc.connect(gain).connect(this.ctx.destination);osc.start(t0);osc.stop(t0+dur+.02);} correct(){this.beep({freq:1046,dur:.09,type:'triangle',vol:.25});} wrong(){this.beep({freq:160,dur:.14,type:'sawtooth',vol:.22});} fire(){this.beep({freq:480,dur:.06,type:'square',vol:.12});} success(){[880,1175,1568].forEach((f,i)=>setTimeout(()=>this.beep({freq:f,dur:.09,type:'triangle',vol:.25}),i*110));} }
+const SND=new Sound();
+function generateFruitSVG(name){const n=String(name).toLowerCase(),S='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">',E='</svg>';switch(n){case'apple':return `${S}<rect x="58" y="16" width="4" height="14" fill="#7b4a12"/><ellipse cx="48" cy="26" rx="12" ry="6" fill="#43a047" transform="rotate(-20 48 26)"/><circle cx="60" cy="70" r="36" fill="#e53935"/>${E}`;case'banana':return `${S}<path d="M30 80 C 20 50, 60 40, 95 60 C 75 68, 58 85, 30 80 Z" fill="#fdd835"/>${E}`;case'orange':return `${S}<circle cx="60" cy="65" r="38" fill="#fb8c00"/><ellipse cx="47" cy="28" rx="10" ry="6" fill="#43a047" transform="rotate(-15 47 28)"/>${E}`;case'grape':return `${S}<circle cx="50" cy="48" r="12" fill="#8e24aa"/><circle cx="70" cy="48" r="12" fill="#8e24aa"/><circle cx="40" cy="64" r="12" fill="#8e24aa"/><circle cx="60" cy="64" r="12" fill="#8e24aa"/><circle cx="80" cy="64" r="12" fill="#8e24aa"/><circle cx="50" cy="80" r="12" fill="#8e24aa"/><circle cx="70" cy="80" r="12" fill="#8e24aa"/><path d="M60 22 L65 10" stroke="#795548" stroke-width="4"/><ellipse cx="65" cy="16" rx="10" ry="6" fill="#43a047" transform="rotate(-10 65 16)"/>${E}`;case'peach':return `${S}<path d="M60 35 C 80 20, 102 40, 100 65 C 98 90, 78 102, 60 105 C 42 102, 22 90, 20 65 C 18 40, 40 20, 60 35 Z" fill="#ff8a80"/><path d="M60 35 C 70 48, 70 62, 60 75 C 50 62, 50 48, 60 35 Z" fill="#ffab91"/><ellipse cx="46" cy="24" rx="11" ry="6" fill="#43a047" transform="rotate(-20 46 24)"/>${E}`;case'pear':return `${S}<path d="M60 25 C 85 35, 88 60, 75 80 C 70 88, 65 100, 60 100 C 55 100, 50 88, 45 80 C 32 60, 35 35, 60 25 Z" fill="#c5e1a5"/><rect x="58" y="18" width="4" height="10" fill="#7b4a12"/><ellipse cx="52" cy="18" rx="10" ry="6" fill="#43a047" transform="rotate(-20 52 18)"/>${E}`;case'mango':return `${S}<ellipse cx="65" cy="70" rx="38" ry="28" fill="#ffb74d" transform="rotate(-18 65 70)"/><ellipse cx="80" cy="55" rx="10" ry="6" fill="#43a047" transform="rotate(-10 80 55)"/>${E}`;case'lemon':return `${S}<path d="M25 65 C 30 40, 90 40, 95 65 C 90 90, 30 90, 25 65 Z" fill="#ffeb3b"/>${E}`;case'cherry':return `${S}<circle cx="45" cy="82" r="14" fill="#d32f2f"/><circle cx="75" cy="82" r="14" fill="#d32f2f"/><path d="M45 68 C 46 50, 60 45, 70 40" stroke="#795548" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M75 68 C 74 50, 60 45, 70 40" stroke="#795548" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="72" cy="38" rx="10" ry="6" fill="#43a047" transform="rotate(-10 72 38)"/>${E}`;case'strawberry':return `${S}<path d="M60 35 C 82 28, 100 45, 90 68 C 80 92, 60 105, 60 105 C 60 105, 40 92, 30 68 C 20 45, 38 28, 60 35 Z" fill="#e53935"/><circle cx="52" cy="60" r="2" fill="#ffeb3b"/><circle cx="68" cy="62" r="2" fill="#ffeb3b"/><circle cx="56" cy="74" r="2" fill="#ffeb3b"/><circle cx="64" cy="76" r="2" fill="#ffeb3b"/><path d="M60 32 L45 20 M60 32 L75 20 M60 32 L60 15" stroke="#43a047" stroke-width="5" stroke-linecap="round"/>${E}`;default:return `${S}<rect x="10" y="10" width="100" height="100" rx="12" fill="#9ccc65"/>${E}`;}}
+const fruits=[{word:'apple'},{word:'banana'},{word:'orange'},{word:'grape'},{word:'peach'},{word:'pear'},{word:'mango'},{word:'lemon'},{word:'cherry'},{word:'strawberry'},{word:'blueberry'},{word:'pineapple'},{word:'watermelon'},{word:'kiwi'},{word:'papaya'},{word:'lychee'},{word:'dragonfruit'}];
+const $=sel=>document.querySelector(sel), clamp=(v,a,b)=>Math.max(a,Math.min(b,v)); function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;} function showToast(msg,ms=1000){const el=$("#toast");el.textContent=msg;el.classList.add('show');clearTimeout(showToast._t);showToast._t=setTimeout(()=>el.classList.remove('show'),ms);}
+const canvas=$("#game"),ctx=canvas.getContext('2d',{alpha:false});let W=0,H=0,DPR=1;function resize(){const rect=canvas.parentElement.getBoundingClientRect();DPR=Math.min(2,window.devicePixelRatio||1);W=Math.floor(rect.width*DPR);H=Math.floor(rect.height*DPR);canvas.width=W;canvas.height=H;canvas.style.width=rect.width+'px';canvas.style.height=rect.height+'px';}window.addEventListener('resize',resize);resize();
+class Player{constructor(){this.w=70;this.h=24;this.x=W/2;this.y=H-this.h-10;this.speed=460;this.cooldown=0;}update(dt,input){const vx=(input.right-input.left)*this.speed;this.x+=vx*dt;this.x=clamp(this.x,this.w/2+6,W-this.w/2-6);if(this.cooldown>0)this.cooldown-=dt;}draw(g){g.save();g.translate(this.x,this.y);g.fillStyle='#5671ff';g.fillRect(-this.w/2,-this.h/2,this.w,this.h);g.fillStyle='#9db0ff';g.fillRect(-12,-this.h/2-10,24,16);g.fillStyle='#c7d2ff';g.fillRect(-4,-this.h/2-22,8,22);g.restore();}canFire(){return this.cooldown<=0;}fire(bullets){if(!this.canFire())return;this.cooldown=0.06;bullets.push(new Bullet(this.x,this.y-this.h/2-24));SND.fire();}}
+class Bullet{constructor(x,y){this.x=x;this.y=y;this.r=6;this.vy=-2160;this.alive=true;}update(dt){this.y+=this.vy*dt;if(this.y<-20)this.alive=false;}draw(g){g.save();g.fillStyle='#e0e7ff';g.beginPath();g.arc(this.x,this.y,this.r,0,Math.PI*2);g.fill();g.restore();}}
+class LetterTarget{constructor(ch,id,x,y){this.ch=ch;this.id=id;this.x=x;this.y=y;this.r=26;this.vx=(Math.random()*2-1)*60;this.vy=(Math.random()*2-1)*60;}update(dt){this.x+=this.vx*dt;this.y+=this.vy*dt;if(this.x<this.r||this.x>W-this.r){this.vx*=-1;this.x=clamp(this.x,this.r,W-this.r);}if(this.y<70||this.y>H-160){this.vy*=-1;this.y=clamp(this.y,70,H-160);}}draw(g,isNext){g.save();g.fillStyle=isNext?'#16326b':'#142347';g.strokeStyle=isNext?'#8be9fd':'#4a5b9b';g.lineWidth=3;g.beginPath();g.arc(this.x,this.y,this.r,0,Math.PI*2);g.fill();g.stroke();g.fillStyle=isNext?'#dff8ff':'#d7e1ff';g.font=(22*DPR)+'px system-ui,Segoe UI,Arial';g.textAlign='center';g.textBaseline='middle';g.fillText(this.ch.toUpperCase(),this.x,this.y+1);g.restore();}}
+const input={left:0,right:0,fire:0};
+window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')input.left=1;if(e.key==='ArrowRight')input.right=1;if(e.code==='Space'){input.fire=1;e.preventDefault();}});window.addEventListener('keyup',e=>{if(e.key==='ArrowLeft')input.left=0;if(e.key==='ArrowRight')input.right=0;if(e.code==='Space')input.fire=0;});
+const mobileKeys=$("#mobileKeys");['left','right','fire'].forEach(act=>{const el=mobileKeys.querySelector(`[data-act="${act}"]`);const press=()=>{if(act==='left')input.left=1;else if(act==='right')input.right=1;else input.fire=1;};const release=()=>{if(act==='left')input.left=0;else if(act==='right')input.right=0;else input.fire=0;};['pointerdown','pointerup','pointerleave','pointercancel'].forEach(tp=>el.addEventListener(tp,ev=>{ev.preventDefault();if(tp==='pointerdown')press();else release();}));});
+const DIFF_SECONDS={Easy:60,Normal:40,Hard:20};let difficulty='Normal';const diffSel=$("#difficulty"),perWordEl=$("#perWord");diffSel.addEventListener('change',()=>{difficulty=diffSel.value;perWordEl.textContent=DIFF_SECONDS[difficulty]+'s / word';showToast('Difficulty: '+difficulty+' ('+DIFF_SECONDS[difficulty]+'s/word)',900);if(running&&!paused){timeLeft=DIFF_SECONDS[difficulty];$("#timer").textContent=timeLeft.toFixed(0);}});
+let player=new Player(),bullets=[],letters=[],running=false,paused=false,score=0,timeLeft=40,curWord='',curIndex=0,pool=shuffle(fruits.slice()),lastTs=0;
+function newWord(){if(pool.length===0)pool=shuffle(fruits.slice());curWord=pool.pop().word;curIndex=0;$("#fruitBox").innerHTML=generateFruitSVG(curWord);updateWordProgress();spawnLetters(curWord);timeLeft=DIFF_SECONDS[difficulty];$("#timer").textContent=timeLeft.toFixed(0);showToast('New word: '+curWord.toUpperCase(),900);}
+function updateWordProgress(){const done=curWord.slice(0,curIndex).split('').join(' '),todo=curWord.slice(curIndex).split('').map(()=>'_').join(' ');$("#wordProgress").textContent=(done+(done&&todo?' ':'')+todo).trim();}
+function spawnLetters(word){letters=[];bullets=[];const chars=word.split(''),n=chars.length;for(let i=0;i<n;i++){const angle=(i/n)*Math.PI*2+Math.random()*.5,radius=Math.min(W,H)*.32+Math.random()*40,cx=W/2+Math.cos(angle)*radius*.6,cy=H/2+Math.sin(angle)*radius*.3;letters.push(new LetterTarget(chars[i],i+'-'+Math.random().toString(16).slice(2),clamp(cx,36,W-36),clamp(cy,80,H-200)));}}
+function startGame(){running=true;paused=false;score=0;$("#score").textContent=score;newWord();lastTs=performance.now();requestAnimationFrame(loop);}function pauseGame(){paused=!paused;showToast(paused?'Paused':'Resumed');}function nextWord(){newWord();}function resetGame(){running=false;paused=false;player=new Player();bullets=[];letters=[];$("#score").textContent='0';$("#timer").textContent=String(DIFF_SECONDS[difficulty]);$("#fruitBox").innerHTML='';$("#wordProgress").textContent='_ _ _';showToast('Reset. Click Start',1000);}
+$("#btnStart").addEventListener('click',()=>{if(!running)startGame();else newWord();});$("#btnPause").addEventListener('click',pauseGame);$("#btnNext").addEventListener('click',nextWord);$("#btnReset").addEventListener('click',resetGame);
+function loop(ts){if(!running)return;const dt=Math.min(.03,(ts-lastTs)/1000);lastTs=ts;if(!paused){update(dt);draw();}requestAnimationFrame(loop);}
+function update(dt){timeLeft-=dt;if(timeLeft<=0){showToast("Time's up! Next word…",900);newWord();}$("#timer").textContent=Math.max(0,timeLeft|0);player.update(dt,input);if(input.fire)player.fire(bullets);bullets.forEach(b=>b.update(dt));bullets=bullets.filter(b=>b.alive);letters.forEach(l=>l.update(dt));bullets.forEach(b=>{letters.forEach(l=>{if(!b.alive)return;const dx=b.x-l.x,dy=b.y-l.y,rr=(b.r+l.r)*(b.r+l.r);if(dx*dx+dy*dy<=rr){b.alive=false;const needed=curWord[curIndex];if(l.ch===needed){SND.correct();letters=letters.filter(x=>x!==l);curIndex++;updateWordProgress();if(curIndex>=curWord.length){SND.success();score+=100;$("#score").textContent=score;setTimeout(()=>newWord(),450);}}else{SND.wrong();showToast(`Next letter: ${needed.toUpperCase()}`,700);}}});});}
+function draw(){ctx.fillStyle='#0a0e1b';ctx.fillRect(0,0,W,H);ctx.strokeStyle='rgba(80,100,180,.08)';ctx.lineWidth=1;for(let x=0;x<=W;x+=40*DPR){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}for(let y=0;y<=H;y+=40*DPR){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}letters.forEach(l=>{const needed=curWord[curIndex];l.draw(ctx,l.ch===needed);});bullets.forEach(b=>b.draw(ctx));player.draw(ctx);}
+showToast('Click Start. Space to fire continuously, ← → to move.',1600);document.body.addEventListener('pointerdown',()=>SND.ensure(),{once:true});
+function updateMobileKeysVisibility(){const isSmall=window.innerWidth<900||'ontouchstart' in window;mobileKeys.style.display=isSmall?'flex':'none';}updateMobileKeysVisibility();window.addEventListener('resize',updateMobileKeysVisibility);
 </script>
 </body>
 </html>
