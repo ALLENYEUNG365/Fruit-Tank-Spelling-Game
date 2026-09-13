@@ -1,1 +1,388 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fruit Tank Academy — Secure Portal</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>:root{--ink:#18233b;--cream:#fff6d8;--paper:#fffdf0;--blue:#4f76ff;--blue2:#3454c8;--green:#6fcf61;--yellow:#ffd75a;--pink:#ff7aa8;--shadow:#10182b}*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:var(--ink);background:linear-gradient(#a8ddff 0 38%,#c8e7a5 38%);padding:20px}.shell{max-width:1120px;margin:auto}.top,.panel{border:4px solid var(--ink);box-shadow:8px 8px 0 var(--shadow);background:var(--cream)}.top{padding:14px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;font-size:18px;letter-spacing:1px}.brand b{color:var(--blue2)}.layout{display:grid;grid-template-columns:360px 1fr;gap:14px;margin-top:14px}.panel{padding:16px}.auth h1,.dash h1{font-size:22px;margin:0 0 8px;color:var(--blue2)}.muted{color:#52617d;font-size:13px;line-height:1.6}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0}.tab,.btn{border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:10px;font-weight:800;cursor:pointer;background:#fffdf0}.tab.active{background:var(--pink)}.field{margin:9px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:5px}.field input,.join input{width:100%;padding:11px;border:3px solid var(--ink);background:white;font-size:14px}.btn{background:var(--blue);color:white;width:100%;margin-top:7px}.btn.green{background:var(--green);color:#163019}.btn.dark{background:#71809d}.msg{margin-top:10px;padding:9px;border:3px solid var(--ink);background:#fff0a6;font-size:12px;line-height:1.5}.hidden{display:none!important}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.card{border:3px solid var(--ink);background:var(--paper);padding:12px}.card small{display:block;color:#52617d;font-weight:700}.card strong{display:block;font-size:24px;color:var(--blue2);margin-top:10px}.section{margin-top:12px}.section h2{font-size:15px}.bar{height:12px;border:3px solid var(--ink);background:#253554}.bar i{display:block;height:100%;background:var(--yellow)}.row{display:grid;grid-template-columns:1fr 90px 90px;gap:8px;align-items:center;border:3px solid var(--ink);background:var(--paper);padding:9px;margin:6px 0;font-size:13px}.tag{border:2px solid var(--ink);padding:5px;text-align:center;background:#d9f3c8;font-size:11px}.join{margin-top:12px;border:3px solid var(--ink);padding:12px;background:#fff0a6}.join h2{font-size:14px;margin:0 0 8px}.join input{text-transform:uppercase;letter-spacing:2px}.links{display:flex;gap:8px;margin-top:10px}.links .btn{flex:1;text-decoration:none;text-align:center}.empty{padding:18px;border:3px dashed var(--ink);background:#fffdf0;color:#52617d}.footer{margin-top:14px;text-align:center;color:#52617d;font-size:12px}@media(max-width:850px){body{padding:8px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.row{grid-template-columns:1fr}}</style></head><body><div class="shell"><header class="top"><div class="brand">🍓 FRUIT <b>TANK</b> ACADEMY<br><span style="font-size:11px;color:#52617d">SECURE LEARNING PORTAL</span></div><div>🎮 🧑‍🏫</div></header><div class="layout"><section class="panel auth" id="authPanel"><h1>WELCOME BACK</h1><p class="muted">Sign in with Supabase Auth. New accounts are always created as students.</p><div class="tabs"><button class="tab active" id="loginTab">SIGN IN</button><button class="tab" id="signupTab">CREATE ACCOUNT</button></div><div class="field"><label>EMAIL</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com"></div><div class="field"><label>PASSWORD</label><input id="password" type="password" autocomplete="current-password" placeholder="At least 6 characters"></div><div class="field hidden" id="nameField"><label>DISPLAY NAME</label><input id="displayName" autocomplete="name" placeholder="Cadet name"></div><button class="btn" id="submitBtn">🔐 SIGN IN</button><div id="msg" class="msg hidden"></div></section><section class="panel dash hidden" id="dashPanel"><div style="display:flex;justify-content:space-between;align-items:center"><div><h1 id="welcome">COMMAND CENTER</h1><span id="roleBadge" class="tag"></span></div><button class="btn dark" id="logout" style="width:auto">SIGN OUT</button></div><div id="studentDash" class="hidden"><p class="muted">Your learning data is protected by RLS and scoped to your account.</p><div class="cards"><div class="card"><small>LEVEL</small><strong id="lv">1</strong></div><div class="card"><small>XP</small><strong id="xp">0</strong></div><div class="card"><small>WORDS</small><strong id="words">0</strong></div><div class="card"><small>ACCURACY</small><strong id="acc">100%</strong></div></div><div class="section card"><h2>🎯 DAILY QUEST</h2><div class="bar"><i id="dailyBar"></i></div><p id="dailyText" class="muted">0 / 3 words completed</p></div><div class="section card"><h2>🧠 SPACED REVIEW</h2><p class="muted">Turn spelling mistakes into scheduled reviews. The engine prioritizes due words, weak mastery, repeated errors, and lapses.</p><div class="cards" style="grid-template-columns:1fr 1fr"><div class="card"><small>REVIEW TARGETS</small><strong id="reviewCount">0</strong></div><div class="card"><small>DUE NOW</small><strong id="reviewDue">0</strong></div></div><a class="btn pink" href="adaptive-review.html" style="display:block;text-align:center;text-decoration:none">🧠 START ADAPTIVE REVIEW</a><div id="reviewMsg" class="msg hidden"></div></div><div class="section card"><h2>🏫 JOIN A CLASS</h2><div class="join"><h2>ENTER TEACHER INVITE CODE</h2><input id="inviteInput" placeholder="FT-XXXXXX" maxlength="9"><button class="btn green" id="joinBtn">🚀 JOIN CLASS</button><div id="joinMsg" class="msg hidden"></div></div><div class="section"><h2>MY CLASSES</h2><div id="myClasses"></div></div></div><div class="section card"><h2>📚 RECENT SESSIONS</h2><div id="studentSessions"></div></div></div><div id="teacherDash" class="hidden"><p class="muted">Teacher analytics are available in the full Teacher Command Center.</p><div class="cards"><div class="card"><small>CLASSES</small><strong id="classCount">0</strong></div><div class="card"><small>STUDENTS</small><strong id="studentCount">0</strong></div></div></div><div class="links"><a class="btn green" href="dashboard.html">OPEN COMMAND CENTER</a><a class="btn" href="index.html">PLAY GAME</a></div></section></div><div class="footer">SUPABASE AUTH · POSTGRES · RLS · STUDENT / TEACHER CLASSROOMS</div></div><script>const URL='https://yxhtshjxvlgswfjhxara.supabase.co',KEY='sb_publishable_oLcXJtWtzj515ub8W-BF4g_whX0nB6f';const sb=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});const $=id=>document.getElementById(id);let mode='login';function notice(t,b=false){$('msg').textContent=t;$('msg').style.background=b?'#ffd0df':'#fff0a6';$('msg').classList.remove('hidden')}function showAuth(){$('authPanel').classList.remove('hidden');$('dashPanel').classList.add('hidden')}function showDash(){$('authPanel').classList.add('hidden');$('dashPanel').classList.remove('hidden')}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}$('loginTab').onclick=()=>{mode='login';$('loginTab').classList.add('active');$('signupTab').classList.remove('active');$('nameField').classList.add('hidden');$('submitBtn').textContent='🔐 SIGN IN'};$('signupTab').onclick=()=>{mode='signup';$('signupTab').classList.add('active');$('loginTab').classList.remove('active');$('nameField').classList.remove('hidden');$('submitBtn').textContent='🚀 CREATE STUDENT ACCOUNT'};$('submitBtn').onclick=async()=>{try{const email=$('email').value.trim(),password=$('password').value;if(!email||!password)return notice('Please enter email and password.',true);$('submitBtn').disabled=true;if(mode==='signup'){const name=$('displayName').value.trim()||'Cadet';const {data,error}=await sb.auth.signUp({email,password,options:{data:{display_name:name},emailRedirectTo:location.href}});if(error)throw error;if(!data.session)return notice('Account created. Check your email, then sign in.')}else{const {error}=await sb.auth.signInWithPassword({email,password});if(error)throw error;await loadUser()}}catch(e){notice(e.message||'Authentication failed.',true)}finally{$('submitBtn').disabled=false}};$('logout').onclick=async()=>{await sb.auth.signOut();showAuth()};async function loadUser(){const {data:{user},error}=await sb.auth.getUser();if(error||!user)return showAuth();let {data:p,error:pe}=await sb.from('profiles').select('*').eq('id',user.id).single();if(pe)throw pe;showDash();$('welcome').textContent=(p.display_name||'Cadet')+' // COMMAND CENTER';$('roleBadge').textContent=p.role.toUpperCase();$('studentDash').classList.toggle('hidden',p.role!=='student');$('teacherDash').classList.toggle('hidden',p.role!=='teacher');if(p.role==='student')await loadStudent(p);else{const {data:c}=await sb.from('classes').select('id').eq('teacher_id',p.id);$('classCount').textContent=c?.length||0}}async function loadStudent(p){$('lv').textContent='LV '+p.level;$('xp').textContent=p.xp;$('words').textContent=p.total_words;const a=p.total_shots?Math.round(p.correct_attempts/p.total_shots*100):100;$('acc').textContent=a+'%';const today=new Date().toISOString().slice(0,10);const {data:q}=await sb.from('daily_quests').select('*').eq('student_id',p.id).eq('quest_date',today).maybeSingle();const done=q?.words_completed||0;$('dailyBar').style.width=Math.min(100,done/3*100)+'%';$('dailyText').textContent=done+' / 3 words completed';const {data:s}=await sb.from('learning_sessions').select('*').eq('student_id',p.id).order('started_at',{ascending:false}).limit(6);$('studentSessions').innerHTML=s?.length?s.map(x=>`<div class="row"><b>${esc(x.world.toUpperCase())}</b><span>${x.words_completed||0} words</span><span class="tag">${x.score||0} pts</span></div>`).join(''):'<div class="empty">No sessions yet.</div>';const {data:review,error:reviewError}=await sb.rpc('get_my_spaced_review_queue',{p_limit:20});if(reviewError){$('reviewCount').textContent='—';$('reviewDue').textContent='—';$('reviewMsg').textContent='Spaced review is temporarily unavailable: '+reviewError.message;$('reviewMsg').classList.remove('hidden');$('reviewMsg').style.background='#ffd0df'}else{const rq=review||[];$('reviewCount').textContent=rq.length;$('reviewDue').textContent=rq.filter(x=>x.due).length}const {data:m}=await sb.from('class_memberships').select('class_id,joined_at').eq('student_id',p.id);if(!m?.length)$('myClasses').innerHTML='<div class="empty">You have not joined a class yet.</div>';else{const ids=m.map(x=>x.class_id);const {data:c}=await sb.from('classes').select('id,name,school_name').in('id',ids);$('myClasses').innerHTML=(c||[]).map(x=>`<div class="row"><b>${esc(x.name)}</b><span>${esc(x.school_name||'')}</span><span class="tag">JOINED</span></div>`).join('')}}$('joinBtn').onclick=async()=>{const code=$('inviteInput').value.trim().toUpperCase();if(!code)return;$('joinBtn').disabled=true;try{const {data,error}=await sb.rpc('join_class_by_invite',{p_invite_code:code});if(error)throw error;$('joinMsg').textContent='Joined '+data.name+' successfully!';$('joinMsg').classList.remove('hidden');$('joinMsg').style.background='#d9f3c8';const {data:{user}}=await sb.auth.getUser();const {data:p}=await sb.from('profiles').select('*').eq('id',user.id).single();await loadStudent(p)}catch(e){$('joinMsg').textContent=e.message||'Could not join class.';$('joinMsg').classList.remove('hidden');$('joinMsg').style.background='#ffd0df'}finally{$('joinBtn').disabled=false}};sb.auth.onAuthStateChange((e,s)=>{if(s&&e==='SIGNED_IN')setTimeout(()=>loadUser().catch(x=>notice(x.message,true)),0);else if(e==='SIGNED_OUT')showAuth()});loadUser().catch(()=>{});</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fruit Tank Academy — Secure Portal</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--ink:#18233b;--cream:#fff6d8;--paper:#fffdf0;--blue:#4f76ff;--blue2:#3454c8;--green:#6fcf61;--yellow:#ffd75a;--pink:#ff7aa8;--shadow:#10182b}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:var(--ink);background:linear-gradient(#a8ddff 0 38%,#c8e7a5 38%);padding:20px}
+.shell{max-width:1120px;margin:auto}.top,.panel{border:4px solid var(--ink);box-shadow:8px 8px 0 var(--shadow);background:var(--cream)}
+.top{padding:14px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:900;font-size:18px;letter-spacing:1px}.brand b{color:var(--blue2)}
+.layout{display:grid;grid-template-columns:360px 1fr;gap:14px;margin-top:14px}.panel{padding:16px}
+.auth h1,.dash h1{font-size:22px;margin:0 0 8px;color:var(--blue2)}.muted{color:#52617d;font-size:13px;line-height:1.6}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:14px 0}.tab,.btn{border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:10px;font-weight:800;cursor:pointer;background:#fffdf0}
+.tab.active{background:var(--pink)}.field{margin:9px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:5px}
+.field input,.join input{width:100%;padding:11px;border:3px solid var(--ink);background:white;font-size:14px}.btn{background:var(--blue);color:white;width:100%;margin-top:7px}.btn.green{background:var(--green);color:#163019}.btn.dark{background:#71809d}
+.btn:disabled{opacity:.6;cursor:wait}.msg{margin-top:10px;padding:9px;border:3px solid var(--ink);background:#fff0a6;font-size:12px;line-height:1.5}
+.hidden{display:none!important}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.card{border:3px solid var(--ink);background:var(--paper);padding:12px}
+.card small{display:block;color:#52617d;font-weight:700}.card strong{display:block;font-size:24px;color:var(--blue2);margin-top:10px}
+.section{margin-top:12px}.section h2{font-size:15px}.bar{height:12px;border:3px solid var(--ink);background:#253554}.bar i{display:block;height:100%;background:var(--yellow)}
+.row{display:grid;grid-template-columns:1fr 90px 90px;gap:8px;align-items:center;border:3px solid var(--ink);background:var(--paper);padding:9px;margin:6px 0;font-size:13px}
+.tag{border:2px solid var(--ink);padding:5px;text-align:center;background:#d9f3c8;font-size:11px}.join{margin-top:12px;border:3px solid var(--ink);padding:12px;background:#fff0a6}
+.join h2{font-size:14px;margin:0 0 8px}.join input{text-transform:uppercase;letter-spacing:2px}.links{display:flex;gap:8px;margin-top:10px}.links .btn{flex:1;text-decoration:none;text-align:center}
+.empty{padding:18px;border:3px dashed var(--ink);background:#fffdf0;color:#52617d}.footer{margin-top:14px;text-align:center;color:#52617d;font-size:12px}
+.status{font-size:12px;margin-top:8px;color:#52617d}.ok{color:#176b28;font-weight:700}.err{color:#9a1740;font-weight:700}
+@media(max-width:850px){body{padding:8px}.layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="top">
+  <div class="brand">🍓 FRUIT <b>TANK</b> ACADEMY<br><span style="font-size:11px;color:#52617d">SECURE LEARNING PORTAL</span></div>
+  <div>🎮 🧑‍🏫</div>
+</header>
+
+<div class="layout">
+<section class="panel auth" id="authPanel">
+  <h1>WELCOME BACK</h1>
+  <p class="muted">Sign in with Supabase Auth. New accounts are always created as students.</p>
+
+  <div class="tabs">
+    <button type="button" class="tab active" id="loginTab">SIGN IN</button>
+    <button type="button" class="tab" id="signupTab">CREATE ACCOUNT</button>
+  </div>
+
+  <div class="field">
+    <label>EMAIL</label>
+    <input id="email" type="email" autocomplete="email" placeholder="you@example.com">
+  </div>
+
+  <div class="field">
+    <label>PASSWORD</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="At least 6 characters">
+  </div>
+
+  <div class="field hidden" id="nameField">
+    <label>DISPLAY NAME</label>
+    <input id="displayName" autocomplete="name" placeholder="Cadet name">
+  </div>
+
+  <button type="button" class="btn" id="submitBtn">🔐 SIGN IN</button>
+  <div id="authStatus" class="status"></div>
+  <div id="msg" class="msg hidden"></div>
+</section>
+
+<section class="panel dash hidden" id="dashPanel">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div><h1 id="welcome">COMMAND CENTER</h1><span id="roleBadge" class="tag"></span></div>
+    <button type="button" class="btn dark" id="logout" style="width:auto">SIGN OUT</button>
+  </div>
+
+  <div id="studentDash" class="hidden">
+    <p class="muted">Your learning data is protected by RLS and scoped to your account.</p>
+    <div class="cards">
+      <div class="card"><small>LEVEL</small><strong id="lv">1</strong></div>
+      <div class="card"><small>XP</small><strong id="xp">0</strong></div>
+      <div class="card"><small>WORDS</small><strong id="words">0</strong></div>
+      <div class="card"><small>ACCURACY</small><strong id="acc">100%</strong></div>
+    </div>
+
+    <div class="section card">
+      <h2>🎯 DAILY QUEST</h2>
+      <div class="bar"><i id="dailyBar"></i></div>
+      <p id="dailyText" class="muted">0 / 3 words completed</p>
+    </div>
+
+    <div class="section card">
+      <h2>🏫 JOIN A CLASS</h2>
+      <div class="join">
+        <h2>ENTER TEACHER INVITE CODE</h2>
+        <input id="inviteInput" placeholder="FT-XXXXXX" maxlength="9">
+        <button type="button" class="btn green" id="joinBtn">🚀 JOIN CLASS</button>
+        <div id="joinMsg" class="msg hidden"></div>
+      </div>
+      <div class="section"><h2>MY CLASSES</h2><div id="myClasses"></div></div>
+    </div>
+
+    <div class="section card">
+      <h2>📚 RECENT SESSIONS</h2>
+      <div id="studentSessions"></div>
+    </div>
+  </div>
+
+  <div id="teacherDash" class="hidden">
+    <p class="muted">Teacher analytics are available in the full Teacher Command Center.</p>
+    <div class="cards">
+      <div class="card"><small>CLASSES</small><strong id="classCount">0</strong></div>
+      <div class="card"><small>STUDENTS</small><strong id="studentCount">0</strong></div>
+    </div>
+  </div>
+
+  <div class="links">
+    <a class="btn green" href="dashboard.html">OPEN COMMAND CENTER</a>
+    <a class="btn" href="index.html">PLAY GAME</a>
+  </div>
+</section>
+</div>
+
+<div class="footer">SUPABASE AUTH · POSTGRES · RLS · STUDENT / TEACHER CLASSROOMS</div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+const SUPABASE_URL='https://yxhtshjxvlgswfjhxara.supabase.co';
+const SUPABASE_KEY='sb_publishable_oLcXJtWtzj515ub8W-BF4g_whX0nB6f';
+
+const $=id=>document.getElementById(id);
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{
+  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+});
+
+let mode='login';
+let busy=false;
+
+function notice(text,error){
+  const el=$('msg');
+  el.textContent=text;
+  el.style.background=error?'#ffd0df':'#fff0a6';
+  el.classList.remove('hidden');
+}
+function status(text,ok){
+  $('authStatus').textContent=text||'';
+  $('authStatus').className='status '+(ok?'ok':'err');
+}
+function setBusy(on){
+  busy=on;
+  const b=$('submitBtn');
+  b.disabled=on;
+  b.textContent=on
+    ? (mode==='signup'?'⏳ CREATING ACCOUNT...':'⏳ SIGNING IN...')
+    : (mode==='signup'?'🚀 CREATE STUDENT ACCOUNT':'🔐 SIGN IN');
+}
+function showAuth(){
+  $('authPanel').classList.remove('hidden');
+  $('dashPanel').classList.add('hidden');
+}
+function showDash(){
+  $('authPanel').classList.add('hidden');
+  $('dashPanel').classList.remove('hidden');
+}
+function esc(s){
+  return String(s??'').replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function friendlyError(e){
+  const m=String(e?.message||e||'Authentication failed.');
+  const x=m.toLowerCase();
+  if(x.includes('user already registered')) return 'This email is already registered. Please use SIGN IN.';
+  if(x.includes('email signups are disabled')) return 'Email registration is disabled in Supabase Auth.';
+  if(x.includes('password')) return 'Password must be at least 6 characters.';
+  if(x.includes('invalid email')) return 'Please enter a valid email address.';
+  if(x.includes('rate limit')) return 'Too many attempts. Please wait a moment and try again.';
+  if(x.includes('redirect')) return 'Email verification redirect is not configured correctly in Supabase.';
+  return m;
+}
+
+function switchMode(next){
+  mode=next;
+  $('loginTab').classList.toggle('active',mode==='login');
+  $('signupTab').classList.toggle('active',mode==='signup');
+  $('nameField').classList.toggle('hidden',mode!=='signup');
+  $('submitBtn').textContent=mode==='signup'?'🚀 CREATE STUDENT ACCOUNT':'🔐 SIGN IN';
+  $('msg').classList.add('hidden');
+  status('',true);
+}
+
+$('loginTab').addEventListener('click',()=>switchMode('login'));
+$('signupTab').addEventListener('click',()=>switchMode('signup'));
+
+$('submitBtn').addEventListener('click',async function(){
+  if(busy) return;
+
+  const email=$('email').value.trim();
+  const password=$('password').value;
+  const name=$('displayName').value.trim()||'Cadet';
+
+  $('msg').classList.add('hidden');
+  status('',true);
+
+  if(!email) return notice('Please enter your email address.',true);
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    return notice('Please enter a valid email address.',true);
+  if(!password) return notice('Please enter your password.',true);
+  if(password.length<6) return notice('Password must be at least 6 characters.',true);
+
+  setBusy(true);
+
+  try{
+    if(mode==='signup'){
+      const redirectTo=window.location.origin+window.location.pathname;
+
+      const {data,error}=await sb.auth.signUp({
+        email,
+        password,
+        options:{
+          data:{display_name:name,role:'student'},
+          emailRedirectTo:redirectTo
+        }
+      });
+
+      if(error) throw error;
+
+      if(data?.session){
+        status('✅ Account created. Signing you in...',true);
+        await loadUser();
+      }else{
+        status('✅ Account created. Check your email to verify the account, then sign in.',true);
+        notice('Student account created successfully. Please check your email for the verification link.');
+      }
+    }else{
+      const {data,error}=await sb.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      if(!data?.user) throw new Error('Login completed but no user session was returned.');
+      status('✅ Signed in.',true);
+      await loadUser();
+    }
+  }catch(e){
+    console.error('[Fruit Tank Auth]',e);
+    status('❌ '+friendlyError(e),false);
+    notice(friendlyError(e),true);
+  }finally{
+    setBusy(false);
+  }
+});
+
+$('logout').addEventListener('click',async()=>{
+  await sb.auth.signOut();
+  showAuth();
+  switchMode('login');
+  $('email').value='';
+  $('password').value='';
+});
+
+async function loadUser(){
+  const {data,error}=await sb.auth.getUser();
+  if(error) throw error;
+  const user=data?.user;
+  if(!user){showAuth();return;}
+
+  let {data:p,error:pe}=await sb.from('profiles').select('*').eq('id',user.id).single();
+
+  if(pe){
+    throw new Error('Signed in, but your student profile could not be loaded: '+pe.message);
+  }
+
+  showDash();
+  $('welcome').textContent=(p.display_name||'Cadet')+' // COMMAND CENTER';
+  $('roleBadge').textContent=String(p.role||'student').toUpperCase();
+  $('studentDash').classList.toggle('hidden',p.role!=='student');
+  $('teacherDash').classList.toggle('hidden',p.role!=='teacher');
+
+  if(p.role==='student'){
+    await loadStudent(p);
+  }else{
+    const {data:c,error:ce}=await sb.from('classes').select('id').eq('teacher_id',p.id);
+    if(ce) throw ce;
+    $('classCount').textContent=c?.length||0;
+  }
+}
+
+async function loadStudent(p){
+  $('lv').textContent='LV '+(p.level??1);
+  $('xp').textContent=p.xp??0;
+  $('words').textContent=p.total_words??0;
+
+  const shots=Number(p.total_shots||0);
+  const correct=Number(p.correct_attempts||0);
+  const a=shots?Math.round(correct/shots*100):100;
+  $('acc').textContent=a+'%';
+
+  const today=new Date().toISOString().slice(0,10);
+  const {data:q,error:qe}=await sb.from('daily_quests')
+    .select('*').eq('student_id',p.id).eq('quest_date',today).maybeSingle();
+  if(qe) console.warn('[Daily Quest]',qe);
+
+  const done=Number(q?.words_completed||0);
+  $('dailyBar').style.width=Math.min(100,done/3*100)+'%';
+  $('dailyText').textContent=done+' / 3 words completed';
+
+  const {data:s,error:se}=await sb.from('learning_sessions')
+    .select('*').eq('student_id',p.id).order('started_at',{ascending:false}).limit(6);
+  if(se) console.warn('[Sessions]',se);
+
+  $('studentSessions').innerHTML=s?.length
+    ? s.map(x=>`<div class="row"><b>${esc(String(x.world||'').toUpperCase())}</b><span>${x.words_completed||0} words</span><span class="tag">${x.score||0} pts</span></div>`).join('')
+    : '<div class="empty">No sessions yet.</div>';
+
+  const {data:m,error:me}=await sb.from('class_memberships')
+    .select('class_id,joined_at').eq('student_id',p.id);
+  if(me) console.warn('[Memberships]',me);
+
+  if(!m?.length){
+    $('myClasses').innerHTML='<div class="empty">You have not joined a class yet.</div>';
+  }else{
+    const ids=m.map(x=>x.class_id);
+    const {data:c,error:ce}=await sb.from('classes')
+      .select('id,name,school_name').in('id',ids);
+    if(ce) console.warn('[Classes]',ce);
+    $('myClasses').innerHTML=(c||[]).map(x=>
+      `<div class="row"><b>${esc(x.name)}</b><span>${esc(x.school_name||'')}</span><span class="tag">JOINED</span></div>`
+    ).join('');
+  }
+}
+
+$('joinBtn').addEventListener('click',async()=>{
+  const code=$('inviteInput').value.trim().toUpperCase();
+  if(!code){
+    $('joinMsg').textContent='Please enter an invite code.';
+    $('joinMsg').classList.remove('hidden');
+    $('joinMsg').style.background='#ffd0df';
+    return;
+  }
+
+  $('joinBtn').disabled=true;
+  try{
+    const {data,error}=await sb.rpc('join_class_by_invite',{p_invite_code:code});
+    if(error) throw error;
+    $('joinMsg').textContent='Joined '+data.name+' successfully!';
+    $('joinMsg').classList.remove('hidden');
+    $('joinMsg').style.background='#d9f3c8';
+    const {data:{user}}=await sb.auth.getUser();
+    const {data:p,error:pe}=await sb.from('profiles').select('*').eq('id',user.id).single();
+    if(pe) throw pe;
+    await loadStudent(p);
+  }catch(e){
+    $('joinMsg').textContent=e.message||'Could not join class.';
+    $('joinMsg').classList.remove('hidden');
+    $('joinMsg').style.background='#ffd0df';
+  }finally{
+    $('joinBtn').disabled=false;
+  }
+});
+
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==='SIGNED_IN' && session){
+    setTimeout(()=>loadUser().catch(e=>{
+      console.error('[loadUser]',e);
+      showAuth();
+      notice(e.message||'Could not load your profile.',true);
+    }),0);
+  }else if(event==='SIGNED_OUT'){
+    showAuth();
+  }
+});
+
+(async()=>{
+  try{
+    const {data}=await sb.auth.getSession();
+    if(data?.session){
+      await loadUser();
+    }else{
+      showAuth();
+    }
+  }catch(e){
+    console.error('[initial auth]',e);
+    showAuth();
+    // Do not silently swallow initialization errors anymore.
+    status('Portal ready. Please sign in or create a student account.',true);
+  }
+})();
+})();
+</script>
+</body>
+</html>
