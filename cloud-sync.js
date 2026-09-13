@@ -1,29 +1,40 @@
 /* Fruit Tank Academy — cloud sync bridge. Loaded by cloud-game.html. */
 (function(){
   const frame=document.getElementById('gameFrame');
-  const sb=window.supabaseClientForFruitTank || null;
+  const sb=window.supabaseClientForFruitTank||null;
   const SUPABASE_URL='https://yxhtshjxvlgswfjhxara.supabase.co';
   const SUPABASE_KEY='sb_publishable_oLcXJtWtzj515ub8W-BF4g_whX0nB6f';
-  const client=sb || (window.supabase&&window.supabase.createClient?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null);
+  const client=sb||(window.supabase&&window.supabase.createClient?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null);
   window.supabaseClientForFruitTank=client;
   let installed=false;
   const bridge=`
   (function(){
     if(window.__fruitTankCloudInstalled)return; window.__fruitTankCloudInstalled=true;
     const cloud=window.parent.supabaseClientForFruitTank;
-    let sessionStartedAt=null, startSnapshot=null, lastWord='';
+    let sessionStartedAt=null,startSnapshot=null,lastWord='';
+    let attemptLock=false;
     async function syncProfile(){
       try{
         if(!cloud||typeof profile==='undefined')return;
         await cloud.rpc('sync_my_learning',{p_xp:Number(profile.xp||0),p_level:Number(profile.level||1),p_streak:Number(profile.streak||0),p_total_words:Number(profile.totalWords||0),p_correct_attempts:Number(profile.correct||0),p_total_shots:Number(profile.shots||0)});
       }catch(e){console.warn('[FruitTank Cloud] profile sync',e)}
     }
+    async function recordAttempt(word,target,selected,isCorrect){
+      if(!cloud||typeof profile==='undefined'||!profile.__cloudUserId||!word||!target||!selected||attemptLock)return;
+      attemptLock=true;
+      try{
+        const w=typeof world==='function'?world().id:'orchard';
+        const {error}=await cloud.rpc('record_my_word_attempt',{p_session_id:null,p_word:String(word),p_target_letter:String(target),p_selected_letter:String(selected),p_is_correct:Boolean(isCorrect),p_world:String(w)});
+        if(error)throw error;
+      }catch(e){console.warn('[FruitTank Cloud] word attempt sync',e)}
+      finally{attemptLock=false}
+    }
     async function saveWord(word){
-      if(!cloud||!word||typeof profile==='undefined')return;
+      if(!cloud||!word||typeof profile==='undefined'||!profile.__cloudUserId)return;
       try{
         const worldName=typeof world==='function'?world().id:'orchard';
-        const {data}=await cloud.from('word_progress').select('attempts,correct_attempts,mastered').eq('student_id',profile.__cloudUserId||'').eq('word',word).maybeSingle();
-        const attempts=Number(data?.attempts||0)+1, correct=Number(data?.correct_attempts||0)+1;
+        const {data}=await cloud.from('word_progress').select('attempts,correct_attempts,mastered').eq('student_id',profile.__cloudUserId).eq('word',word).maybeSingle();
+        const attempts=Number(data?.attempts||0)+1,correct=Number(data?.correct_attempts||0)+1;
         await cloud.from('word_progress').upsert({student_id:profile.__cloudUserId,word,world:worldName,attempts,correct_attempts:correct,mastered:true,last_attempt_at:new Date().toISOString()},{onConflict:'student_id,word'});
       }catch(e){console.warn('[FruitTank Cloud] word sync',e)}
     }
@@ -37,14 +48,14 @@
     async function saveSession(){
       if(!cloud||typeof profile==='undefined'||!sessionStartedAt)return;
       try{
-        const started=new Date(sessionStartedAt).toISOString();
-        const ended=new Date().toISOString();
+        const started=new Date(sessionStartedAt).toISOString(),ended=new Date().toISOString();
         const w=typeof world==='function'?world():{id:'orchard'};
         const mode=document.getElementById('difficulty')?.value||'Normal';
-        await cloud.rpc('record_my_session',{p_world:w.id,p_mode:mode,p_score:Number(state.score||0),p_words_completed:Number(state.words||0),p_shots:Number(profile.shots||0)-Number(startSnapshot?.shots||0),p_correct_attempts:Number(profile.correct||0)-Number(startSnapshot?.correct||0),p_duration_seconds:Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)),p_started_at:started,p_ended_at:ended});
-        await syncProfile(); await saveDaily();
+        const {error}=await cloud.rpc('record_my_session',{p_world:w.id,p_mode:mode,p_score:Number(state.score||0),p_words_completed:Number(state.words||0),p_shots:Number(profile.shots||0)-Number(startSnapshot?.shots||0),p_correct_attempts:Number(profile.correct||0)-Number(startSnapshot?.correct||0),p_duration_seconds:Math.max(0,Math.round((Date.now()-sessionStartedAt)/1000)),p_started_at:started,p_ended_at:ended});
+        if(error)throw error;
+        await syncProfile();await saveDaily();
       }catch(e){console.warn('[FruitTank Cloud] session sync',e)}
-      sessionStartedAt=null; startSnapshot=null;
+      sessionStartedAt=null;startSnapshot=null;
     }
     async function bootstrap(){
       try{
@@ -55,22 +66,40 @@
       }catch(e){console.warn('[FruitTank Cloud] bootstrap',e)}
     }
     const originalStart=startGame;
-    startGame=function(){
-      originalStart();
-      sessionStartedAt=Date.now();
-      startSnapshot={shots:Number(profile.shots||0),correct:Number(profile.correct||0)};
-      syncProfile();
-    };
+    startGame=function(){originalStart();sessionStartedAt=Date.now();startSnapshot={shots:Number(profile.shots||0),correct:Number(profile.correct||0)};syncProfile()};
     const originalComplete=completeWord;
-    completeWord=function(){
-      const completedWord=typeof state!=='undefined'?state.word:'';
-      originalComplete();
-      if(completedWord)saveWord(completedWord);
-      saveDaily(); syncProfile();
-    };
+    completeWord=function(){const completedWord=typeof state!=='undefined'?state.word:'';originalComplete();if(completedWord)saveWord(completedWord);saveDaily();syncProfile()};
     const originalFinish=finish;
-    finish=function(won){ originalFinish(won); saveSession(); };
-    window.addEventListener('beforeunload',()=>{syncProfile();});
+    finish=function(won){originalFinish(won);saveSession()};
+
+    /* Capture every correct letter through the game's XP event. */
+    const originalAddXP=addXP;
+    addXP=function(n){
+      try{
+        if(typeof state!=='undefined'&&state.running&&state.word){
+          const expected=state.word[state.index];
+          if(expected)recordAttempt(state.word,expected,expected,true);
+        }
+      }catch(e){console.warn('[FruitTank Cloud] correct attempt hook',e)}
+      return originalAddXP(n);
+    };
+
+    /* Wrong shots already emit a toast containing the selected letter. */
+    const originalToast=toast;
+    toast=function(t,ms){
+      try{
+        const text=String(t||'');
+        const m=text.match(/^TRY AGAIN · REVIEW\\s+([A-Z])$/i);
+        if(m&&typeof state!=='undefined'&&state.running&&state.word){
+          const expected=state.word[state.index];
+          if(expected)recordAttempt(state.word,expected,m[1],false);
+        }
+      }catch(e){console.warn('[FruitTank Cloud] wrong attempt hook',e)}
+      return originalToast(t,ms);
+    };
+
+    window.addEventListener('beforeunload',()=>{syncProfile()});
+    window.addEventListener('online',()=>{syncProfile()});
     setInterval(()=>{if(typeof state!=='undefined'&&state.running)syncProfile()},15000);
     bootstrap();
   })();`;
