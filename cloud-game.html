@@ -3,7 +3,8 @@
 <body><div class="account" id="account"><span class="account-label" id="accountLabel">SIGNED IN</span><button class="logout" id="logout" type="button">↪ SIGN OUT</button></div><div id="gate" class="gate"><div class="card"><h1>🍓 FRUIT TANK ACADEMY</h1><p>CLOUD PLAY // STUDENT DATA SYNC</p><input id="email" type="email" autocomplete="email" placeholder="Email"><input id="password" type="password" autocomplete="current-password" placeholder="Password"><div><button class="btn ok" id="login">SIGN IN & PLAY</button><button class="btn" id="signup">CREATE STUDENT</button></div><div><a class="btn" href="adaptive-review.html">🧠 ADAPTIVE REVIEW</a></div><div class="status" id="status"></div><p style="font-size:9px">Game progress and spelling attempts synchronize to Supabase. Adaptive Review turns repeated errors into a personalized practice queue.</p></div></div><iframe id="gameFrame" class="hidden"></iframe>
 <script>
 const SUPABASE_URL='https://yxhtshjxvlgswfjhxara.supabase.co';
-const SUPABASE_KEY='sb_publishable_oLcXJtWtzj515ub8W-B4g_whX0nB6f';
+// Temporary compatibility mode: this project's legacy anon key is active and valid. It has the same low-privilege browser role as the publishable key.
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl4aHRzaGp4dmxnc3dmamh4YXJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3MjE2MjMsImV4cCI6MjA4MTI5NzYyM30.J4kpzCZkKiU4E0wFHxBgmBr-mKGD6MF9AGS8nTJKDM4';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 window.supabaseClientForFruitTank=sb;
 const $=s=>document.querySelector(s),status=t=>$('#status').textContent=t;
