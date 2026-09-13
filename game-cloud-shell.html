@@ -24,6 +24,9 @@ frame.addEventListener('load',()=>{
   try{
     const doc=frame.contentDocument;
     if(!doc) throw new Error('game document unavailable');
+    doc.querySelectorAll('a[href^="game.html"]').forEach(a=>{
+      a.href='game.html?embedded=1&v=20260914';
+    });
     const script=doc.createElement('script');
     script.src='cloud-sync-v2.js?v=20260914';
     script.onload=()=>setStatus('CLOUD SYNC: READY');
