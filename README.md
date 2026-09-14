@@ -9,22 +9,84 @@
   <a href="https://github.com/ALLENYEUNG365/Fruit-Tank-Spelling-Game"><strong>💻 SOURCE CODE</strong></a>
 </p>
 
-![GitHub stars](https://img.shields.io/github/stars/ALLENYEUNG365/Fruit-Tank-Spelling-Game?style=flat-square)
-![GitHub last commit](https://img.shields.io/github/last-commit/ALLENYEUNG365/Fruit-Tank-Spelling-Game?style=flat-square)
-![Vercel](https://img.shields.io/badge/Production-Vercel-000000?style=flat-square&logo=vercel)
-![Supabase](https://img.shields.io/badge/Backend-Supabase-3ecf8e?style=flat-square&logo=supabase&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=flat-square&logo=javascript&logoColor=111)
+<p align="center">
+  <img src="https://img.shields.io/github/stars/ALLENYEUNG365/Fruit-Tank-Spelling-Game?style=flat-square" alt="GitHub stars">
+  <img src="https://img.shields.io/github/last-commit/ALLENYEUNG365/Fruit-Tank-Spelling-Game?style=flat-square" alt="Last commit">
+  <img src="https://img.shields.io/badge/Production-Vercel-000000?style=flat-square&logo=vercel" alt="Vercel">
+  <img src="https://img.shields.io/badge/Backend-Supabase-3ecf8e?style=flat-square&logo=supabase&logoColor=white" alt="Supabase">
+  <img src="https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?style=flat-square&logo=javascript&logoColor=111" alt="JavaScript">
+</p>
 
-> **Portfolio positioning:** Fruit Tank Academy is presented as a deployable EdTech product prototype—not only a browser game. The repository demonstrates the connection between gameplay, learning evidence, adaptive review, cloud data, and security-aware application architecture.
+> **Portfolio positioning:** Fruit Tank Academy is a deployable EdTech product prototype—not only a browser game. It connects gameplay, learning evidence, adaptive review, cloud data, and security-aware application architecture.
 
 ---
 
-## ✨ Product at a glance
+## 🖼️ Product Showcase
+
+> **Screenshots are intentionally left as placeholders.** Replace each block with your latest production screenshot when ready. Recommended image width: 1400–1800 px.
+
+### 🎮 Gameplay
+
+```text
+┌───────────────────────────────────────────────────────────────┐
+│                     SCREENSHOT PLACEHOLDER                    │
+│                                                               │
+│  Fruit Tank gameplay — tank · fruit target · letters · HUD    │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
+
+### 🧠 Review Quest
+
+```text
+┌───────────────────────────────────────────────────────────────┐
+│                     SCREENSHOT PLACEHOLDER                    │
+│                                                               │
+│  Personalized review queue · mastery · next review · drill   │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
+
+### 👤 Student Academy
+
+```text
+┌───────────────────────────────────────────────────────────────┐
+│                     SCREENSHOT PLACEHOLDER                    │
+│                                                               │
+│  Student portal · progress · game access · Academy navigation │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
+
+### 📊 Teacher / Analytics
+
+```text
+┌───────────────────────────────────────────────────────────────┐
+│                     SCREENSHOT PLACEHOLDER                    │
+│                                                               │
+│  Teacher insights · learner progress · classroom analytics    │
+│                                                               │
+└───────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🎥 Demo Video
+
+**Latest demo:**
+
+👉 `[INSERT YOUR NEW DEMO VIDEO LINK HERE]`
+
+You can replace the placeholder with Google Drive, YouTube, Loom, or another public demo URL.
+
+---
+
+## 🚀 Product at a glance
 
 | | |
 |---|---|
 | 🎮 **Game-Based Learning** | Spell fruit vocabulary by moving a tank and shooting letters in sequence. |
-| 🧠 **Adaptive Review** | Missed or review-due vocabulary is surfaced in a focused Review Quest. |
+| 🧠 **Adaptive Review** | Review-due and difficult vocabulary is surfaced in a focused Review Quest. |
 | ☁️ **Cloud Learning Data** | Authenticated sessions, attempts, progress, quests, and learner metrics sync to Supabase. |
 | 🔐 **Security by Design** | RLS, ownership checks, and guarded RPCs protect learning data and privileged writes. |
 | 📊 **Learning Evidence** | Gameplay produces structured evidence that can feed mastery and spaced-review logic. |
@@ -32,97 +94,57 @@
 
 ---
 
-## 🖼️ Product Screenshots
+## 🧭 Architecture
 
-> **Screenshot placeholders are intentional.** Replace the placeholders below with your latest production screenshots when ready.
+### Visual architecture diagram
 
-### 🎮 Main Game
+The full Mermaid architecture source is available in [`docs/ARCHITECTURE-DIAGRAM.md`](docs/ARCHITECTURE-DIAGRAM.md).
 
-`[SCREENSHOT PLACEHOLDER — Fruit Tank gameplay: tank, fruit target, letter enemies, score/time HUD]`
+```mermaid
+flowchart TB
+    AA[Adventure Academy]
+    EL[English Learning\ncommunity + practice]
+    FT[Fruit Tank Academy\ngame + adaptive review]
+    SC[Shared Core\nAuth + Security + Storage + Keepalive]
+    SB[(Supabase Free\nALLENYEUNG365's Project)]
+    VE[Vercel\nProduction Delivery]
+    GH[GitHub\nCanonical Source]
 
-### 🧠 Review Quest
-
-`[SCREENSHOT PLACEHOLDER — Adaptive Review page showing review queue, mastery, next review, and focused drill]`
-
-### 👤 Student Academy / Portal
-
-`[SCREENSHOT PLACEHOLDER — Student portal showing learner progress and Academy navigation]`
-
-### 📊 Teacher / Analytics View
-
-`[SCREENSHOT PLACEHOLDER — Teacher insights / analytics dashboard]`
-
----
-
-## 🎥 Demo Video
-
-**Replace this link with the latest demo recording when ready:**
-
-👉 `[NEW DEMO VIDEO LINK — INSERT HERE]`
-
-The repository can use a direct video link, Google Drive share link, YouTube link, or other public demo URL.
-
----
-
-## 🧭 Architecture at a glance
-
-```text
-                           ADVENTURE ACADEMY
-                                  │
-             ┌────────────────────┼────────────────────┐
-             │                    │                    │
-             ▼                    ▼                    ▼
-      English Learning      Fruit Tank Academy     Shared Core
-      community + practice  game + adaptive review  Auth / security
-             │                    │                    │
-             └────────────────────┼────────────────────┘
-                                  ▼
-                    ALLENYEUNG365's Supabase
-                         single Free project
+    AA --> EL
+    AA --> FT
+    AA --> SC
+    EL --> SB
+    FT --> SB
+    SC --> SB
+    GH --> VE --> APP[Browser Application]
+    APP --> SB
 ```
 
-### Production data flow
+### Learning data flow
 
-```text
-                    🎮 Fruit Tank gameplay
-                              │
-                              ▼
-                     learning_sessions
-                              │
-                     ┌────────┴────────┐
-                     ▼                 ▼
-               word_attempts      profile metrics
-                     │                 │
-                     ▼                 ▼
-               word_progress       learner state
-                     │
-                     ▼
-            spaced-review queue / RPC
-                     │
-                     ▼
-                🧠 Review Quest
-                     │
-                     ▼
-          mastery → interval → next review
+```mermaid
+flowchart LR
+    G[🎮 Gameplay] --> S[learning_sessions]
+    G --> A[word_attempts]
+    A --> P[word_progress]
+    P --> Q[Spaced Review Queue]
+    Q --> R[🧠 Review Quest]
+    R --> M[Mastery]
+    M --> I[Review Interval]
+    I --> N[Next Review]
+    N --> G
 ```
 
-### Deployment boundary
+### Security flow
 
-```text
-Developer change
-      ↓
-GitHub main
-      ↓
-Vercel production
-      ↓
-Browser
-      ↓
-Supabase Auth / RPC / RLS
-      ↓
-Fruit Tank learning data
+```mermaid
+flowchart LR
+    B[Browser] --> AUTH[Supabase Auth]
+    AUTH --> ID[Authenticated Identity]
+    ID --> RLS[RLS + Ownership Checks]
+    RLS --> RPC[Guarded RPC / Permitted SELECT]
+    RPC --> DATA[(Product-owned learning data)]
 ```
-
-For the full architecture and business-data ownership model, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ---
 
@@ -198,16 +220,7 @@ Focused drill
 mastery / interval / next review
 ```
 
-The current queue can use signals including:
-
-- recent mistakes
-- wrong-letter patterns
-- mastery level
-- review due time
-- repeated difficulty / lapses
-- previous review performance
-
-The learner can then practice a selected word again without leaving the Academy flow.
+The current queue can use signals including recent mistakes, wrong-letter patterns, mastery level, review due time, repeated difficulty, and previous review performance.
 
 ---
 
@@ -262,16 +275,7 @@ Guarded RPC or permitted SELECT
 Product-owned learning tables
 ```
 
-Core protections include:
-
-- Row Level Security on business data
-- ownership checks inside guarded functions
-- server-side recalculation of letter correctness
-- session ownership validation
-- locked-down `search_path` for SECURITY DEFINER functions
-- no service-role key in browser code
-
-Detailed architecture and security boundaries are documented in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+Core protections include RLS on business data, ownership checks inside guarded functions, server-side recalculation of letter correctness, session ownership validation, locked-down `search_path` for SECURITY DEFINER functions, and no service-role key in browser code.
 
 ---
 
@@ -338,36 +342,35 @@ The vocabulary layer can expand without redesigning the underlying learning arch
 | Source | GitHub |
 | Learning model | Adaptive review + spaced reinforcement |
 
-The project intentionally stays lightweight so the game loop and learning logic remain visible and auditable.
-
 ---
 
 ## 📁 Repository map
 
 ```text
 Fruit-Tank-Spelling-Game/
-├── index.html                 # public entry
-├── auth.html                  # authentication
-├── student-portal.html        # learner hub
-├── play.html                  # authenticated game launcher
-├── game.html                  # compatibility route
-├── game-core.html             # core game runtime
-├── adaptive-review.html       # personalized review quest
-├── dashboard.html             # learner / analytics surface
-├── teacher-insights.html      # teacher-oriented insights
-├── supabase-config.js         # centralized browser config
-├── cloud-sync-core.js         # non-blocking game/cloud bridge
+├── index.html
+├── auth.html
+├── student-portal.html
+├── play.html
+├── game.html
+├── game-core.html
+├── adaptive-review.html
+├── dashboard.html
+├── teacher-insights.html
+├── supabase-config.js
+├── cloud-sync-core.js
 ├── supabase/
 │   ├── schema.sql
 │   └── migrations/
 ├── docs/
-│   └── ARCHITECTURE.md
+│   ├── ARCHITECTURE.md
+│   └── ARCHITECTURE-DIAGRAM.md
 └── README.md
 ```
 
 ---
 
-## 🚀 Live product
+## 🔗 Live product
 
 ### Production
 
@@ -379,17 +382,15 @@ Fruit-Tank-Spelling-Game/
 
 ### Demo video
 
-👉 **[NEW DEMO VIDEO LINK — INSERT HERE]**
+👉 **[INSERT YOUR NEW DEMO VIDEO LINK HERE]**
 
 ---
 
 ## 💡 Why this project matters
 
-Fruit Tank Academy demonstrates how several disciplines can fit together in one deployable learning product:
+Fruit Tank Academy demonstrates how game mechanics, English learning, adaptive review, cloud architecture, and security-aware data design can fit together in one deployable learning product.
 
-**Game mechanics + English learning + adaptive review + cloud architecture + security-aware data design**
-
-The project started as a spelling-game experiment and has evolved into a portfolio-ready EdTech product prototype with persistent learner state, a structured learning data model, a review loop, and a clear production boundary.
+The project started as a spelling-game experiment and has evolved into a portfolio-ready EdTech product prototype with persistent learner state, structured learning evidence, a review loop, and a clear production boundary.
 
 ---
 
